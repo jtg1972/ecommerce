@@ -4,6 +4,8 @@ import './default.scss';
 //pages
 import HomePage from './pages/HomePage';
 import Registration from './pages/Registration';
+import Dashboard from './pages/Dashboard';
+
 import Login from './pages/Login';
 import Recovery from './pages/Recovery';
 //layouts
@@ -14,6 +16,7 @@ import {Route,Switch,Redirect} from 'react-router-dom';
 import {auth,handleUserProfile} from './firebase/utils';
 import {setCurrentUser} from './redux/User/user.actions';
 import {useDispatch,useSelector} from 'react-redux';
+import WithAuth from './hoc/withAuth';
 
 const mapToState=({user})=>({
   currentUser:user.currentUser
@@ -21,12 +24,12 @@ const mapToState=({user})=>({
 function App() {
 
  
-  let authListener=null;
+  
   const dispatch=useDispatch();
   const {currentUser}=useSelector(mapToState);
   
-  useEffect(()=>{ 
-    authListener=auth.onAuthStateChanged(
+ useEffect(()=>{ 
+    const authListener=auth.onAuthStateChanged(
       async (userAuth)=>{
         //console.log("userauth",userAuth);
         if(userAuth){
@@ -40,14 +43,16 @@ function App() {
           });
           
         }else{
-          dispatch(setCurrentUser(null));
+          dispatch(setCurrentUser(userAuth));
  
           
         }
         
         
-      })
+      }
+    );
     return ()=>authListener();
+  
     },[]);
    
   
@@ -61,7 +66,7 @@ function App() {
           </HomePageLayout>
           );}}/>
         <Route path="/registration" render={()=>
-          currentUser?<Redirect to="/"/>:(
+          (
             <MainLayout currentUser={currentUser}>
               <Registration/>
             </MainLayout>
@@ -70,11 +75,11 @@ function App() {
         }/>
         <Route path="/login" render={()=>{
           return (
-            currentUser?<Redirect to="/"/>:(
+          
             <MainLayout currentUser={currentUser}>
               <Login/>
-            </MainLayout>)
-          );
+            </MainLayout>);
+          
           
         }}/>
 
@@ -83,10 +88,22 @@ function App() {
             
             <MainLayout>
               <Recovery/>
-            </MainLayout>)
+            </MainLayout>);
           
           
         }}/>
+        <Route path="/dashboard" render={()=>{
+          return (
+            <WithAuth>
+              <MainLayout>
+                <Dashboard/>
+              </MainLayout>
+            </WithAuth>
+            );
+          
+          
+        }}/>
+
       </Switch>
         
     </div>

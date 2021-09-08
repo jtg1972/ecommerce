@@ -1,39 +1,63 @@
-import React,{useState} from 'react';
+import React,{useEffect, useState} from 'react';
 import AuthWrapper from '../AuthWrapper';
 import Button from '../forms/Button';
 import FormInput from '../forms/FormInput';
 import {auth} from './../../firebase/utils';
 import './styles.scss';
-
-const initialState={
-  email:'',
-  errors:[]
-};
+import {useSelector,useDispatch} from 'react-redux';
+import {resetPassword,resetAllAuthForms} from './../../redux/User/user.actions'
+import {useHistory} from 'react-router-dom';
+const mapState=({user})=>({
+  resetPasswordSuccess:user.resetPasswordSuccess,
+  resetPasswordError:user.resetPasswordError
+});
 
 const EmailPassword=(props)=>{
-  const [state,setState]=useState(initialState);
+  const [email,setEmail]=useState("");
+  const[errors,setErrors]=useState([]);
+
+  const {resetPasswordError,resetPasswordSuccess}=useSelector(mapState);
+  const dispatch=useDispatch();
+  const history=useHistory();
   const configAuthWrapper={
     headline:"Email Password"
   };
-
-  const handleSubmit=async(e)=>{
-    e.preventDefault();
-    try{
-      const {email}=state;
-      const config={
-        url:'http://localhost:3000/login'
-      };
-      console.log("email",email);
-      await auth.sendPasswordResetEmail(email,config);
-      console.log("password reset");
-    }catch(e){
-      const err=['Email not found. Please try again'];
-      setState({...state,errors:err})
-    }
-
+  const resetForm=()=>{
+    setEmail("");
+    setErrors([]);
   }
 
-  const {errors}=state;
+  useEffect(()=>{
+    if(resetPasswordSuccess){
+      dispatch(resetAllAuthForms());
+      history.push("/login");
+      resetForm();
+    }
+  },[resetPasswordSuccess])
+
+  useEffect(()=>{
+    if(Array.isArray(resetPasswordError)&& resetPasswordError.length>0){
+      setErrors(resetPasswordError);
+    }
+  },[resetPasswordError])
+
+  const handleSubmit=(e)=>{
+    e.preventDefault();
+    dispatch(resetPassword(email));
+    // try{
+      
+    //   const config={
+    //     url:'http://localhost:3000/login'
+    //   };
+      
+    //   await auth.sendPasswordResetEmail(email,config);
+      
+    // }catch(e){
+      
+    //   setErrors([e.message]);
+    // }
+
+  }
 
   return (
     <AuthWrapper {...configAuthWrapper}>
@@ -49,8 +73,8 @@ const EmailPassword=(props)=>{
         <form onSubmit={(e)=>handleSubmit(e)}>
           <FormInput type="email" 
             placeholder="Email"
-            value={state.email}
-            handleChange={(e)=>setState({...state,email:e.target.value})}/>
+            value={email}
+            handleChange={(e)=>setEmail(e.target.value)}/>
           <Button type="submit">Email Password</Button>
         </form>
       </div>

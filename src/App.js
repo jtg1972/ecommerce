@@ -14,9 +14,13 @@ import HomePageLayout from './layouts/HomePageLayout';
 
 import {Route,Switch,Redirect} from 'react-router-dom';
 import {auth,handleUserProfile} from './firebase/utils';
-import {setCurrentUser} from './redux/User/user.actions';
+import {checkUserSession, setCurrentUser} from './redux/User/user.actions';
 import {useDispatch,useSelector} from 'react-redux';
 import WithAuth from './hoc/withAuth';
+import {onCheckUserSession} from './redux/rootSaga';
+import Admin from './pages/Admin';
+import WithAdminAuth from './hoc/withAdminAuth';
+import AdminToolbar from './components/AdminToolbar';
 
 const mapToState=({user})=>({
   currentUser:user.currentUser
@@ -26,48 +30,23 @@ function App() {
  
   
   const dispatch=useDispatch();
-  const {currentUser}=useSelector(mapToState);
   
- useEffect(()=>{ 
-    const authListener=auth.onAuthStateChanged(
-      async (userAuth)=>{
-        //console.log("userauth",userAuth);
-        if(userAuth){
-          const userRef=await handleUserProfile(userAuth);
-          userRef.onSnapshot(snapshot => {
-            dispatch(setCurrentUser({
-              id: snapshot.id,
-              ...snapshot.data()
-            }));
- 
-          });
-          
-        }else{
-          dispatch(setCurrentUser(userAuth));
- 
-          
-        }
-        
-        
-      }
-    );
-    return ()=>authListener();
-  
-    },[]);
-   
-  
+  useEffect(()=>{
+    dispatch(checkUserSession());
+  },[])
   return (
     <div className="App">
+      
       <Switch>
         <Route exact path="/" render={(props)=>{
           return(
-          <HomePageLayout currentUser={currentUser}>
+          <HomePageLayout>
             <HomePage/>
           </HomePageLayout>
           );}}/>
         <Route path="/registration" render={()=>
           (
-            <MainLayout currentUser={currentUser}>
+            <MainLayout>
               <Registration/>
             </MainLayout>
           )
@@ -76,7 +55,7 @@ function App() {
         <Route path="/login" render={()=>{
           return (
           
-            <MainLayout currentUser={currentUser}>
+            <MainLayout>
               <Login/>
             </MainLayout>);
           
@@ -99,6 +78,19 @@ function App() {
                 <Dashboard/>
               </MainLayout>
             </WithAuth>
+            );
+          
+          
+        }}/>
+
+      <Route path="/admin" render={()=>{
+          return (
+            <WithAdminAuth>
+              <MainLayout>
+                <Admin/>
+              </MainLayout>
+            </WithAdminAuth>
+            
             );
           
           

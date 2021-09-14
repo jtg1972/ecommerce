@@ -5,11 +5,11 @@ import FormInput from '../forms/FormInput';
 import {auth} from './../../firebase/utils';
 import './styles.scss';
 import {useSelector,useDispatch} from 'react-redux';
-import {resetPassword,resetAllAuthForms} from './../../redux/User/user.actions'
+import {resetPasswordStart,resetUserState} from './../../redux/User/user.actions'
 import {useHistory} from 'react-router-dom';
 const mapState=({user})=>({
   resetPasswordSuccess:user.resetPasswordSuccess,
-  resetPasswordError:user.resetPasswordError
+  resetPasswordError:user.userErr
 });
 
 const EmailPassword=(props)=>{
@@ -29,8 +29,9 @@ const EmailPassword=(props)=>{
 
   useEffect(()=>{
     if(resetPasswordSuccess){
-      dispatch(resetAllAuthForms());
+      //dispatch(resetAllAuthForms());
       history.push("/login");
+      dispatch(resetUserState());
       resetForm();
     }
   },[resetPasswordSuccess])
@@ -43,7 +44,7 @@ const EmailPassword=(props)=>{
 
   const handleSubmit=(e)=>{
     e.preventDefault();
-    dispatch(resetPassword(email));
+    dispatch(resetPasswordStart(email));
     // try{
       
     //   const config={

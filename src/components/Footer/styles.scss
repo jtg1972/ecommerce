@@ -1,8 +1,13 @@
 .footer{
+  border-top:1px solid #d3d3d3;
+  height:2rem;
+  font-size:.8rem;
+  display:flex;
+  align-items:center;
   .wrap{
     max-width:850px;
     margin:0 auto;
-    height:50px;
+    
     line-height:50px;
   }
 }

@@ -9,14 +9,14 @@ import {resetPasswordStart,resetUserState} from './../../redux/User/user.actions
 import {useHistory} from 'react-router-dom';
 const mapState=({user})=>({
   resetPasswordSuccess:user.resetPasswordSuccess,
-  resetPasswordError:user.userErr
+  resetError:user.resetError
 });
 
 const EmailPassword=(props)=>{
   const [email,setEmail]=useState("");
   const[errors,setErrors]=useState([]);
 
-  const {resetPasswordError,resetPasswordSuccess}=useSelector(mapState);
+  const {resetError,resetPasswordSuccess}=useSelector(mapState);
   const dispatch=useDispatch();
   const history=useHistory();
   const configAuthWrapper={
@@ -26,21 +26,25 @@ const EmailPassword=(props)=>{
     setEmail("");
     setErrors([]);
   }
+  useEffect(()=>{
+    return ()=>{
+      resetUserState();
+    }
+  })
 
   useEffect(()=>{
     if(resetPasswordSuccess){
       //dispatch(resetAllAuthForms());
       history.push("/login");
-      dispatch(resetUserState());
       resetForm();
     }
   },[resetPasswordSuccess])
 
   useEffect(()=>{
-    if(Array.isArray(resetPasswordError)&& resetPasswordError.length>0){
-      setErrors(resetPasswordError);
+    if(Array.isArray(resetError)&& resetError.length>0){
+      setErrors(resetError);
     }
-  },[resetPasswordError])
+  },[resetError])
 
   const handleSubmit=(e)=>{
     e.preventDefault();

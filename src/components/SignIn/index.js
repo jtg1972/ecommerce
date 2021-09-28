@@ -6,12 +6,12 @@ import AuthWrapper from './../AuthWrapper';
 import {Link} from 'react-router-dom';
 import {useHistory} from 'react-router-dom';
 import {useDispatch,useSelector} from 'react-redux';
-import {emailSignInStart,googleSignInStart} from './../../redux/User/user.actions';
+import {emailSignInStart,googleSignInStart, resetUserState} from './../../redux/User/user.actions';
 
 const mapState=({user})=>({
   currentUser:user.currentUser,
-  userErr:user.userErr
-
+  signInError:user.signInError,
+  googleError:user.googleError
 });
 
 const SignIn=(props)=>{
@@ -20,12 +20,17 @@ const SignIn=(props)=>{
   const[errors,setErrors]=useState([]);
   const history=useHistory();  
   const dispatch=useDispatch();
-  const {currentUser,userErr}=useSelector(mapState);
+  const {currentUser,signInError,googleError}=useSelector(mapState);
   const resetForm=()=>{
     setEmail("");
     setPassword("");
     setErrors([]);
   };
+
+  useEffect(()=>{
+    dispatch(resetUserState());
+    setErrors([]);
+  },[]);
 
   useEffect(()=>{
     console.log("sisucc",currentUser);
@@ -37,10 +42,17 @@ const SignIn=(props)=>{
   },[currentUser]);
 
   useEffect(()=>{
-    if(Array.isArray(userErr) && userErr.length>0){
-      setErrors(userErr);
+    console.log("sie",signInError);
+    if(Array.isArray(signInError) && signInError.length>0){
+      setErrors(signInError);
     }
-  },[userErr]);
+  },[signInError]);
+
+  useEffect(()=>{
+    if(Array.isArray(googleError) && googleError.length>0){
+      setErrors(googleError);
+    }
+  },[googleError]);
 
 
 

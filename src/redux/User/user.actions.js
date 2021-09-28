@@ -28,11 +28,25 @@ export const signUpUserStart=(userCredentials)=>({
   payload:userCredentials
 });
 
-export const userError=err=>({
-  type:userTypes.USER_ERROR,
+export const signInError=err=>({
+  type:userTypes.SIGN_IN_ERROR,
   payload:err
 });
 
+export const signUpError=err=>({
+  type:userTypes.SIGN_UP_ERROR,
+  payload:err
+});
+
+export const resetError=err=>({
+  type:userTypes.RESET_ERROR,
+  payload:err
+});
+
+export const googleError=err=>({
+  type:userTypes.GOOGLE_ERROR,
+  payload:err
+});
 export const resetPasswordStart=email=>({
   type:userTypes.RESET_PASSWORD_START,
   payload:email

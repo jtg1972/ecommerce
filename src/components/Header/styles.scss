@@ -1,18 +1,46 @@
 .header{
   font-weight:300;
-  height:3.5rem;
+  height:2rem;
+  font-size:0.8rem;
   box-shadow: 0 2px 4px 0 rgba(0,0,0,.1);
   .wrap{
     height:100%;
-    position:relative;
-    max-width: 850px;
+    //position:relative;
+    display:flex;
+    
+    max-width:850px;
     margin:0 auto;
+    justify-content:space-between;
+    align-items:center;
     .logo{
+      //display:inline-block;
+      //width:70px;
+      
       font-weight:700;
-      position:absolute;
+      /*position:absolute;
       top:50%;
       left:0px;
       transform:translateY(-50%);
+      */
+    }
+    nav{
+      //display:block;
+      font-weight: 400;
+      //width:100%;
+      margin:0;
+      padding:0;
+      text-align:center;
+      /*top:50%;
+      position:absolute;
+      transform:translateY(-50%);*/
+      ul,ul li{
+        margin:0;
+        margin-right:20px;
+        padding:0;
+        list-style:none;
+        display:inline-block;
+        text-align:center;
+      }
     }
   }
 }
@@ -20,11 +48,11 @@ a{
   color:black;
 }
 .callToActions{
-  position:absolute;
+  //position:absolute;
   font-weight:400;
-  top:50%;
-  right:10px;
-  transform:translateY(-50%);
+  /*top:50%;
+  right:0px;
+  transform:translateY(-50%);*/
   ul, li{
     margin:0;
     padding:0;
@@ -40,4 +68,5 @@ a{
 }
 .hauto{
   height:auto;
+  font-size:0.8rem
 }

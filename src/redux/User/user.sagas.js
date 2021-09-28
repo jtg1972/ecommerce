@@ -1,17 +1,27 @@
 import {takeLatest, all, call, put}from 'redux-saga/effects';
 import userTypes from './user.types';
-import {signInSuccess,signOutUserSuccess,userError,resetPasswordSuccess} from './user.actions';
+import {signInSuccess,signOutUserSuccess,
+  signInError,signUpError,resetError,googleError,resetPasswordSuccess} from './user.actions';
 import {auth} from './../../firebase/utils';
 import {handleUserProfile,GoogleProvider,getCurrentUser} from './../../firebase/utils';
 import {handleResetPasswordAPI} from './user.helpers';
 export function* getSnapshotFromUserAuth(user,displayName){
   try{
     console.log("userewe22",user,displayName);
-    const userRef=yield call(handleUserProfile,{
-      userAuth:user,
-      additionalData:{displayName}
-    });
+    let userRef={};
+    if(displayName){
+      userRef=yield call(handleUserProfile,{
+        userAuth:user,
+        additionalData:{displayName}
+      });
+    }else{
+      userRef=yield call(handleUserProfile,{
+        userAuth:user,
+      });
+
+    }
     const snapshot=yield userRef.get();
+    console.log("snapshot",snapshot);
     yield put(signInSuccess({
       id: snapshot.id,
       ...snapshot.data()
@@ -19,7 +29,7 @@ export function* getSnapshotFromUserAuth(user,displayName){
     
     
   }catch(e){
-
+    console.log("errorror",e);
   }
 }
 
@@ -33,7 +43,7 @@ export function *emailSignIn({payload:{email,password}}){
   } 
   catch(e){
     console.log("Erroree",e);
-    yield put(userError([e.message]));
+    yield put(signInError([e.message]));
     // dispatch({
     //   type:userTypes.SIGN_IN_ERROR,
     //   payload:[e.message]
@@ -53,7 +63,7 @@ export function* isUserAuthenticated(){
       return;
     }else{
       yield getSnapshotFromUserAuth(userAuth);
-      yield put(userError([]));
+      //yield put(userError([]));
     }
   }catch(err){
     console.log(err);
@@ -100,11 +110,11 @@ export function* signUpUser({payload:{
         password
       );
       yield getSnapshotFromUserAuth(user,displayName);
-      yield put(userError([]));
+      //yield put(userError([]));
 
   }catch(e){
     errors.push(e.message);
-    yield put(userError(errors)); 
+    yield put(signUpError(errors)); 
   }
 }
 
@@ -117,9 +127,9 @@ export function* resetPassword({payload}){
   try{
     yield handleResetPasswordAPI(payload);
     yield put(resetPasswordSuccess());
-    yield put(userError([]));
+    yield put(resetError([]));
   }catch(e){
-    yield put(userError(e));
+    yield put(resetError(e));
   }
 }
 export function* onResetPasswordStart(){
@@ -132,13 +142,15 @@ export function* googleSignIn(){
     console.log("gsi",user);
     yield getSnapshotFromUserAuth(user);
   }catch(e){
-    yield put(userError([e.message]));
+    yield put(googleError([e.message]));
   }
 }
 
 export function* onGoogleSignInStart(){
   yield takeLatest(userTypes.GOOGLE_SIGN_IN_START,googleSignIn);
 }
+
+
 
 
 

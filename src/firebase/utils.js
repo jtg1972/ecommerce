@@ -17,22 +17,26 @@ export const handleUserProfile=async({userAuth,additionalData})=>{
   }
   
   const {uid}=userAuth;
-  console.log("uid22",uid);
+  console.log("uid22b",uid);
   
   const userRef=firestore.doc(`users/${uid}`);
   const snapshot=await userRef.get();
+  console.log("snapshot",snapshot);
   if(!snapshot.exists){
     try{
-      const{displayName,email}=userAuth;
+      console.log("snapshot",snapshot);
+      let {email,displayName}=userAuth;
+      if(!displayName)
+        displayName=additionalData.displayName;
+      console.log("edn",email,displayName);
       const timestamp=new Date();
       const userRoles=['user'];
       console.log("userroles",userRoles);
       await userRef.set({
-        displayName,
         email,
         createdDate:timestamp,
         userRoles:userRoles,
-        ...additionalData
+        displayName:displayName,
       });
     }catch(e){
       console.log(e);

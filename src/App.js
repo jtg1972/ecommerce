@@ -21,6 +21,9 @@ import {onCheckUserSession} from './redux/rootSaga';
 import Admin from './pages/Admin';
 import WithAdminAuth from './hoc/withAdminAuth';
 import AdminToolbar from './components/AdminToolbar';
+import AdminLayout from './layouts/AdminLayout';
+import Search from './pages/Search';
+import ProductDetails from './pages/ProductDetails';
 
 const mapToState=({user})=>({
   currentUser:user.currentUser
@@ -82,13 +85,46 @@ function App() {
           
           
         }}/>
+        <Route exact path="/search" render={()=>{
+          return (
+            
+            <MainLayout>
+              <Search/>
+            </MainLayout>
+            
+            );
+          
+          
+        }}/>
+      <Route path="/search/:filterType" render={()=>{
+          return (
+            
+            <MainLayout>
+              <Search/>
+            </MainLayout>
+            
+            );
+          
+          
+        }}/>
+      <Route path="/product/:productId" render={()=>{
+          return (
+            
+            <MainLayout>
+              <ProductDetails/>
+            </MainLayout>
+            
+            );
+          
+          
+        }}/>
 
       <Route path="/admin" render={()=>{
           return (
             <WithAdminAuth>
-              <MainLayout>
+              <AdminLayout>
                 <Admin/>
-              </MainLayout>
+              </AdminLayout>
             </WithAdminAuth>
             
             );

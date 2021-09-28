@@ -1,0 +1,19 @@
+.products{
+  width:100%;
+  display:grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  height:100%;
+  font-size:.8rem;
+  font-weight:300;
+  box-sizing: border-box;
+  //background-color:red;
+  
+}
+h1{
+  font-size:1rem;
+  margin:10px 0;
+}
+.formRow{
+  height:auto;
+  margin:0;
+}

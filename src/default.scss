@@ -20,6 +20,7 @@ body,
 #root,
 .App{
   height:100vh;
+  display:relative;
   //background-color:yellow;
 }
 
@@ -42,10 +43,12 @@ a, a:hover{
 .fullHeight{
   display:flex;
   height:100vh;
+  width:100%;
+  overflow-y:hidden;
   //background-color:red;
   flex-direction: column;
   .main{
-    margin:0;
+    
     padding:2rem 0;
     width:100%;
     //height:calc(100% - 5.54rem - 50px );
@@ -53,8 +56,9 @@ a, a:hover{
     //background-color:green;
     flex:1;
     max-width:850px;
-    //padding:0 10px;
+    padding:0;
     margin:0 auto;
+    overflow-y:auto;
     
     
   }
@@ -62,5 +66,31 @@ a, a:hover{
 .adjusth{
   //height:calc(100% - 5.54rem - 50px);
   flex:1;
+}
+
+
+.adminLayout{
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  overflow-y:hidden;
+  .controlPanel{
+    overflow-y:auto;
+    flex:1;
+    display:flex;
+    flex-direction:row;
+    .sidebar{
+      width:150px;
+      border-right:1px solid #d3d3d3;
+      //background-color:red;
+    }
+    .content{
+      //background-color:blue;
+      flex:1;
+      overflow-y:auto;
+    
+    }
+    
+  }
 }
 

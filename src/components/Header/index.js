@@ -5,15 +5,22 @@ import {useSelector,useDispatch} from 'react-redux';
 import {signOutUserStart} from './../../redux/User/user.actions';
 import AdminToolbar from '../AdminToolbar';
 import { selectCartItemsCount } from '../../redux/Cart/cart.selectors';
+import { createSelector, createStructuredSelector } from 'reselect';
+import { selectCurrentUser } from '../../redux/User/user.selectors';
 
-const mapToState=(state)=>({
+/*const mapToState=(state)=>({
   currentUser:state.user.currentUser,
   totalNumCartItems:selectCartItemsCount(state)
-});
+});*/
+
+const mapState=({user,cart})=>({
+  totalNumCartItems:selectCartItemsCount(cart),
+  currentUser:selectCurrentUser(user)
+})
 
 const Header=(props)=>{
   const dispatch=useDispatch();
-  const {currentUser,totalNumCartItems}=useSelector(mapToState);
+  const {currentUser,totalNumCartItems}=useSelector(mapState);
 
   const signOut=()=>{
     dispatch(signOutUserStart());

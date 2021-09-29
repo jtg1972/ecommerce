@@ -24,6 +24,7 @@ import AdminToolbar from './components/AdminToolbar';
 import AdminLayout from './layouts/AdminLayout';
 import Search from './pages/Search';
 import ProductDetails from './pages/ProductDetails';
+import Cart from './pages/Cart';
 
 const mapToState=({user})=>({
   currentUser:user.currentUser
@@ -112,6 +113,18 @@ function App() {
             
             <MainLayout>
               <ProductDetails/>
+            </MainLayout>
+            
+            );
+          
+          
+        }}/>
+
+        <Route path="/cart" render={()=>{
+          return (
+            
+            <MainLayout>
+              <Cart/>
             </MainLayout>
             
             );

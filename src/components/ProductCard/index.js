@@ -1,6 +1,6 @@
 import React,{useEffect} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router'
+import { useParams,useHistory } from 'react-router'
 import { fetchProductStart, setProduct } from '../../redux/Products/products.actions';
 import './styles.scss'
 import Men from '../../assets/lasvegas-jorgetono.jpg';
@@ -14,6 +14,7 @@ const mapState=({product})=>({
 const ProductCard = () => {
   const {productId}=useParams();
   const dispatch=useDispatch();
+  const history=useHistory();
 
   const {product}=useSelector(mapState);
 
@@ -55,6 +56,7 @@ const ProductCard = () => {
                   }
                   console.log("PRODID",productId);
                   dispatch(addProduct(product));
+                  history.push('/cart');
                 }}>
                 Add to Cart
               </Button>

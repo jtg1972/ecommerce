@@ -25,9 +25,34 @@ export const handleAddToCart=({
         return item
     })
   }else{
-    prevCartItems.push({...nextCartItem,qty:quantityIncrement});
-    return prevCartItems
+    return [...prevCartItems,{...nextCartItem,qty:quantityIncrement}];
+    
   }
     
+
+}
+
+export const handleRemoveCartItem=({
+  prevCartItems,
+  cartItemToRemove
+})=>{
+  return prevCartItems.filter(item=>
+    item.documentID!==cartItemToRemove.documentID)
+}
+
+export const handleReduceCartItem=({
+  prevCartItems,
+  cartItemToReduce
+})=>{
+  const existingCartItem=prevCartItems.find(item=>
+    item.documentID==cartItemToReduce.documentID)
+  if(existingCartItem.qty==1){
+    return prevCartItems.filter(item=>item.documentID!==cartItemToReduce.documentID)
+  }else{
+    return prevCartItems.map(item=>
+      item.documentID===cartItemToReduce.documentID?
+        {...item,qty:item.qty-1}:item
+    )
+  }
 
 }
